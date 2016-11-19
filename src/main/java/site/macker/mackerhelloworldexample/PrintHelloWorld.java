@@ -1,0 +1,7 @@
+package site.macker.mackerhelloworldexample;
+
+public class PrintHelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello world, as they say!".length());
+    }
+}

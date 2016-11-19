@@ -1,4 +1,38 @@
 apply plugin: 'site.macker.mackergradle.plugin'
+apply plugin: 'java'
+apply plugin: 'java-library-distribution'
+
+sourceCompatibility = 1.7
+version = '1.0.0'
+
+// Task "distZip" added by plugin "java-library-distribution":
+distZip.shouldRunAfter(build)
+
+
+jar {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    manifest {
+        attributes 'Main-Class': 'site.macker.mackerhelloworldexample.PrintHelloWorld',
+                   'Implementation-Title': 'MackerHelloWorldExample',
+                   'Implementation-Version': version,
+                   'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
+                   //'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+    }
+    // How-to add class path:
+    //     http://stackoverflow.com/questions/22659463/add-classpath-in-manifest-using-gradle
+    //     https://gist.github.com/simon04/6865179
+}
+
+//runMackerExample.dependsOn 'checkstyle'
+
+task runMackerExample(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'site.macker.mackerhelloworldexample.PrintHelloWorld'
+
+  // arguments to pass to the application
+  //args 'appArg1'
+}
 
 mackerSettings {
   info = "Info from the client project which is using the MackerGradlePlugin."
@@ -7,6 +41,7 @@ mackerSettings {
 buildscript {
     repositories {
         mavenLocal()
+        jcenter()
     }
     dependencies {
         classpath 'site.macker.mackergradle:MackerGradlePlugin:0.4.3'
